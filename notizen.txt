@@ -1,0 +1,13 @@
+Fragen:
+
+----
+was bedeutet dieses Konstrukt mit super?
+----
+warum bei insert probleme?
+
+required type: int, provided type K
+
+public V insert(K key, V value) {
+
+     V r = data[key].getValue();
+----
