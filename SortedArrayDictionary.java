@@ -53,6 +53,14 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
             else if(key.compareTo(data[m].getKey()) > 0)
                 li = m+1;
             else
+                /*
+                hier sollte stehen:
+                return m
+                also der index sollte zurückgegeben werden (siehe Folie 1-21).
+                Andererseits ist der Rückgabetyp ja V laut interface.
+                Vielleicht brauchen wir eine private Hilfsmethode?
+                z.B. int searchIndex(K key){}
+                 */
                 return data[m].getValue(); //key gefunden
         }
         return null; //key nicht gefunden
@@ -61,9 +69,22 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
 
     public V insert(K key, V value) {
         V i = search(key);
+        /*kommentarVonChristian:
+        hier erstmal den Spezialfall behandeln:
+        == null -> abbruch
+        */
+
         //vorhandenen Eintrag überschreiben:
         if(i != null) {
-            V r = data[i].getValue();
+
+            /*
+            Array kann ja nur mit Integer arbeiten, wenn wir hier z.B. nen String als key haben, kann der Arrayzugriff
+            auf diese Art nicht mehr funktionieren. Daher ist die Fehlermeldung "requires int".
+            also vielleicht sowas:
+            V r = data[search(key)].getValue();
+             */
+
+            V r = data[key].getValue();
             //hier muss über die Values in data[] iteriert werden können
             data[i].setValue(value);
             return r;

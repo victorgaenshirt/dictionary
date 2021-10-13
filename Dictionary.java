@@ -13,6 +13,7 @@ import java.util.Iterator;
  * @param <V> the type of mapped values.
  */
 public interface Dictionary<K,V> extends Iterable<Dictionary.Entry<K,V>> {
+
 	/**
 	 * Associates the specified value with the specified key in this map.
      * If the map previously contained a mapping for the key,
@@ -24,6 +25,7 @@ public interface Dictionary<K,V> extends Iterable<Dictionary.Entry<K,V>> {
 	 * @return the previous value associated with key, or null if there was no mapping for key.
 	 */
 	V insert(K key, V value);
+
 	/**
 	 * Returns the value to which the specified key is mapped,
      * or null if this map contains no mapping for the key.
@@ -33,7 +35,7 @@ public interface Dictionary<K,V> extends Iterable<Dictionary.Entry<K,V>> {
 	V search(K key);
 
 	/**
-	 * Removes the key-vaue-pair associated with the key.
+	 * Removes the key-value-pair associated with the key.
      * Returns the value to which the key was previously associated,
      * or null if the key is not contained in the dictionary.
 	 * @param key key whose mapping is to be removed from the map.
