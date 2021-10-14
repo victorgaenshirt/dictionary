@@ -6,6 +6,8 @@
  */
 package dictionary;
 
+import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -116,17 +118,31 @@ public class DictionaryTest {
 			System.out.println(e.getKey() + ": " + e.getValue() + " search: " + dict.search(e.getKey()));
 		}
 	}
-	private static void terminalTest() {
+	private static void terminalTest() throws IOException {
 		Scanner scanner = new Scanner(System.in);
 
-
 		while (scanner.hasNext()) {
-			String input = scanner.nextLine();
+			String input = scanner.nextLine().toUpperCase();
 			Dictionary<String, String> dict = new SortedArrayDictionary<>();
 
-			if (input.equals("create")) {
-				Dictionary<String, String> dict = new SortedArrayDictionary<>();
-			} else if (input.equals("read")){
+///Erstellung des dict
+
+			if (input.equals("CREATE")) {
+				if (input.equals("CREATE HASHDICTIONARY")) {
+					dict = new dictionary.HashDictionary<>();
+					System.out.println("neues HashDictionary erstellt");
+					continue;
+				} else if (input.equals("CREATE BINARYTREEDICTIONARY")) {
+					dict = new dictionary.BinaryTreeDictionary<>();
+					System.out.println("neues BinaryTreeDictionary erstellt");
+					continue;
+				} else {
+					Dictionary<String, String> dict = new SortedArrayDictionary<>();
+					System.out.println("neues SortedArrayDictionary erstellt");
+				}
+			}
+
+			if (input.equals("READ")){
 			} else if (input.equals("p")){ //print
 				for(Dictionary.Entry<String, String> b : dict) {
 					System.out.println(b.getKey() + "-" + b.getValue());
