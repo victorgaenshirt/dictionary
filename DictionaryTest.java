@@ -148,7 +148,8 @@ public class DictionaryTest {
 					System.out.println(b.getKey() + "-" + b.getValue());
 				}
 			} else if (input.equals("s")){
-			} else if (input.equals("i")){
+			} else if (input.equals("i [a-zA-Z]*")){
+				Pattern pattern = Pattern.compile("([a-zA-Z]+" + "[a-zA-Z]*$")
 			} else if (input.equals("r")){
 			} else if (input.equals("exit")){
 			}
