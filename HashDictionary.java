@@ -9,23 +9,35 @@ static int hash(String key) {
     return adr % m;
 }
 */
+/*
+import dictionary.Dictionary;
 
-V search(K key) {
-    if(adr = searchAdr(key)!=1)
-        return tab[adr].value;
+public class HashDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
+    /*
+    V search(K key) {
+    }
+    if(adr =
+
+    searchAdr(key)!=1)
+            return tab[adr].value;
     else
-        return null;
+            return null;
+
+
+    int searchAdr(K key) {
+        j = 0;
+        do {
+            adr = (h(key) + s. (j, key)) %m;
+            j++
+        } while (tab[adr] != null && tab[adr].key != key);
+        if (tab[adr] != null)
+            return adr;
+        else
+            return -1;
+
+    }
+
+
 }
 
-int searchAdr(K key){
-    j = 0;
-    do{
-        adr = (h(key)+s.(j,key)) % m;
-        j++
-    }while(tab[adr] != null && tab[adr].key != key);
-    if(tab[adr] != null)
-        return adr;
-    else
-        return -1;
-
-}
+*/

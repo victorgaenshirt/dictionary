@@ -85,64 +85,26 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
 
 
     public V insert(K key, V value) {
-        V i = search(key);
-        /*kommentarVonChristian:
-        hier erstmal den Spezialfall behandeln:
-        == null -> abbruch
-        */
-
-        Iterator<Entry<K,V>> it = this.iterator();
-        while (it.hasNext()) {
-
-            Entry<K, V> tmpEntry = it.next();
-
-            // wenn Key vorhanden ist, überschreiben
-            if (tmpEntry.getKey() == key) {
-                V oldValue = tmpEntry.getValue();
-                tmpEntry.setValue(value);
-                return oldValue;
-            }
-
-            //falls key nicht vorhanden
-            if (data.length == size) {
-                data = Arrays.copyOf(data, 2 * size);
-            }
-            // while schleife verschiebt die Einträge nach hinten
-            int j = size - 1;
-            while (j >= 0 && key.compareTo(data[j].getKey()) < 0) {
-                data[j + 1] = data[j];
-                j--;
-            }
-            //Neueintrag an der richtigen Stelle
-            data[j + 1] = new Entry<K, V>(key, value);
-            size++;
+        int i = searchIdx(key);
+        // wenn Key vorhanden ist, überschreiben
+        if (i != -1) {
+            V r = data[i].getValue();
+            data[i].setValue(value);
+            return r;
         }
 
-           /*
-                //alten Einträge nach rechts verschieben im Array
-                int sizeOfTmpArray = size - counter;
-                Entry<V, K> [] tmpArray = new Entry[sizeOfTmpArray];
-                position = counter; //merken, wo der neue Wert eingefügt werden soll
-
-                //tmpArray mit den zu verschiebenden Entries füllen
-                int arrayCopyCounter = 0;
-                while (it.hasNext()) {
-                    it.next();
-                    tmpArray[arrayCopyCounter] = data[counter];
-                }
-
-//                tmpArray = Arrays.copyOf(data[], sizeOfTmpArray);
-
-                //unseren neuen Entry eintragen (counter hochzählen nicht vergessen)
-
-                //ab counter+1 tmpArray in data kopieren
-
-
-
-
-                size++;
-
-            */
+        //falls key nicht vorhanden
+        if (data.length == size) {
+            data = Arrays.copyOf(data, 2 * size);
+        }
+        //Neueintrag an der richtigen Stelle
+        int j = size-1;
+        while(j >= 0 && key.compareTo(data[j].getKey()) < 0){
+            data[j+1] = data[j];
+            j--;
+        }
+        data[j+1] = new Entry<K, V>(key, value);
+        size++;
         return null;
     }
 

@@ -1,6 +1,10 @@
 // O. Bittel
 // 22.02.2017
+/*
+
 package dictionary;
+
+
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -21,8 +25,11 @@ import static java.lang.Math.max;
  * @param <K> Key.
  * @param <V> Value.
  */
+
+/*
 public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
-    
+
+
     static private class Node<K, V> {
         K key;
         V value;
@@ -157,6 +164,7 @@ public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
 	/**
 	 * Pretty prints the tree
 	 */
+/*
 	public void prettyPrint() {
         printR(0, root);
     }
@@ -184,3 +192,4 @@ public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
         System.out.print("|__");
     }
 }
+*/
