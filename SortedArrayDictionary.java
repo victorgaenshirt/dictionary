@@ -30,14 +30,13 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
         int count = 0;
 
         @Override
-        public boolean hasNext() {
-            return count+1 < size;
-        }
+        public boolean hasNext() {return count+1 < size;}
 
         @Override
         public Entry<K,V> next(){
-            if(!hasNext())
-                throw new NoSuchElementException;
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
             ++count;
             return data[count];
         }
@@ -68,6 +67,22 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
         return null; //key nicht gefunden
     }
 
+    public int searchIdx(K key) {
+        int li = 0;
+        int re = size -1;
+
+        while(re>=li) {
+            int m = (li + re) / 2;
+            if (key.compareTo(data[m].getKey()) < 0)
+                re = m - 1;
+            else if (key.compareTo(data[m].getKey()) > 0)
+                li = m + 1;
+            else
+                return m;
+        }
+        return -1;
+    }
+
 
     public V insert(K key, V value) {
         V i = search(key);
@@ -77,8 +92,6 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
         */
 
         Iterator<Entry<K,V>> it = this.iterator();
-        int counter = 0;
-        int position;
         while (it.hasNext()) {
 
             Entry<K, V> tmpEntry = it.next();
@@ -94,10 +107,18 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
             if (data.length == size) {
                 data = Arrays.copyOf(data, 2 * size);
             }
-            new Entry<K, V>(key, value);
+            // while schleife verschiebt die Einträge nach hinten
+            int j = size - 1;
+            while (j >= 0 && key.compareTo(data[j].getKey()) < 0) {
+                data[j + 1] = data[j];
+                j--;
+            }
+            //Neueintrag an der richtigen Stelle
+            data[j + 1] = new Entry<K, V>(key, value);
             size++;
+        }
 
-
+           /*
                 //alten Einträge nach rechts verschieben im Array
                 int sizeOfTmpArray = size - counter;
                 Entry<V, K> [] tmpArray = new Entry[sizeOfTmpArray];
@@ -120,46 +141,20 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
 
 
                 size++;
-            }
-            counter++;
-        };
 
-        //vorhandenen Eintrag überschreiben:
-        if(i != null) {
-
-            /*
-            Array kann ja nur mit Integer arbeiten, wenn wir hier z.B. nen String als key haben, kann der Arrayzugriff
-            auf diese Art nicht mehr funktionieren. Daher ist die Fehlermeldung "requires int".
-            also vielleicht sowas:
-            V r = data[search(key)].getValue();
-             */
-
-            V r = data[key].getValue();
-            //hier muss über die Values in data[] iteriert werden können
-            data[i].setValue(value);
-            return r;
-        }
-        //Neueintrag:
-        if(data.length == size) {
-            data = Arrays.copyOf(data, 2 * size);
-        }
-        int j = size-1;
-        while(j >= 0 && key.compareTo(data[j].getKey()) < 0) {
-            data[j + 1] = data[j];
-            j--;
-        }
-        data[j+1] = new Entry<K,V>(key,value);
-        size++;
+            */
         return null;
     }
 
+
     public V remove(K key) {
-        V i = search(key);
-        if(search(i.) != null) //nicht vorhanden
+        int i = searchIdx(key);
+        if (i == -1)
             return null;
 
+    // Datensatz loeschen und Lücke schließen
         V r = data[i].getValue();
-        for(int j = i; j < size-1; j++)
+        for (int j = i; j < size-1; j++)
             data[j] = data[j+1];
         data[--size] = null;
         return r;
