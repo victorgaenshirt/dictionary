@@ -25,3 +25,17 @@ z.B. int searchIndex(K key){}
 
 siehe Kommentare bei search() und insert()
 ----
+
+
+while (data.hasNext()) {
+    Entry<V, K> tmp = data.next();
+    if (tmp.key ==
+}
+---------------------------------------------------
+insert als Pseudocode:
+
+checken, ob key drin ist
+falls drin, alten value returnen, neuen eintragen
+
+falls nicht drin
+   schleife wieder durchlaufen, checken ob keyToInsert <= vorhandenerKey ist

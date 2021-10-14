@@ -6,8 +6,10 @@ import java.util.Arrays;
 
 public class SortedArrayDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
 
+
     private int size;
     private Entry<K, V>[] data;
+
 
     public SortedArrayDictionary(){
         size = 0;
@@ -73,6 +75,54 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
         hier erstmal den Spezialfall behandeln:
         == null -> abbruch
         */
+
+        Iterator<Entry<K,V>> it = this.iterator();
+        int counter = 0;
+        int position;
+        while (it.hasNext()) {
+
+            Entry<K, V> tmpEntry = it.next();
+
+            // wenn Key vorhanden ist, überschreiben
+            if (tmpEntry.getKey() == key) {
+                V oldValue = tmpEntry.getValue();
+                tmpEntry.setValue(value);
+                return oldValue;
+            }
+
+            //falls key nicht vorhanden
+            if (data.length == size) {
+                data = Arrays.copyOf(data, 2 * size);
+            }
+            new Entry<K, V>(key, value);
+            size++;
+
+
+                //alten Einträge nach rechts verschieben im Array
+                int sizeOfTmpArray = size - counter;
+                Entry<V, K> [] tmpArray = new Entry[sizeOfTmpArray];
+                position = counter; //merken, wo der neue Wert eingefügt werden soll
+
+                //tmpArray mit den zu verschiebenden Entries füllen
+                int arrayCopyCounter = 0;
+                while (it.hasNext()) {
+                    it.next();
+                    tmpArray[arrayCopyCounter] = data[counter];
+                }
+
+//                tmpArray = Arrays.copyOf(data[], sizeOfTmpArray);
+
+                //unseren neuen Entry eintragen (counter hochzählen nicht vergessen)
+
+                //ab counter+1 tmpArray in data kopieren
+
+
+
+
+                size++;
+            }
+            counter++;
+        };
 
         //vorhandenen Eintrag überschreiben:
         if(i != null) {
