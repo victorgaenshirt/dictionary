@@ -6,6 +6,8 @@
  */
 package dictionary;
 
+import java.util.Scanner;
+
 /**
  * Static test methods for different Dictionary implementations.
  * @author oliverbittel
@@ -114,6 +116,27 @@ public class DictionaryTest {
 			System.out.println(e.getKey() + ": " + e.getValue() + " search: " + dict.search(e.getKey()));
 		}
 	}
+	private static void terminalTest() {
+		Scanner scanner = new Scanner(System.in);
 
+
+		while (scanner.hasNext()) {
+			String input = scanner.nextLine();
+			Dictionary<String, String> dict = new SortedArrayDictionary<>();
+
+			if (input.equals("create")) {
+				Dictionary<String, String> dict = new SortedArrayDictionary<>();
+			} else if (input.equals("read")){
+			} else if (input.equals("p")){ //print
+				for(Dictionary.Entry<String, String> b : dict) {
+					System.out.println(b.getKey() + "-" + b.getValue());
+				}
+			} else if (input.equals("s")){
+			} else if (input.equals("i")){
+			} else if (input.equals("r")){
+			} else if (input.equals("exit")){
+			}
+		}
+	}
 	
 }
