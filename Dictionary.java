@@ -57,8 +57,9 @@ public interface Dictionary<K,V> extends Iterable<Dictionary.Entry<K,V>> {
 	 */
 	@Override
 	public Iterator<Entry<K, V>> iterator();
-	
-	/**
+
+
+    /**
 	 * A dictionary entry (key-value pair).
 	 * @param <K> Key (must be immutable).
 	 * @param <V> Value.

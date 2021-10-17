@@ -1,5 +1,8 @@
 // O. Bittel
 // 22.02.2017
+
+/*
+
 package dictionary;
 
 import java.util.Comparator;
@@ -21,6 +24,9 @@ import static java.lang.Math.max;
  * @param <K> Key.
  * @param <V> Value.
  */
+
+/*
+
 public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
     
     static private class Node<K, V> {
@@ -80,6 +86,26 @@ public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
         if(root != null)
             root.parent = null;
         return oldValue;
+    }
+
+    @Override
+    public V search(K key) {
+        return null;
+    }
+
+    @Override
+    public V remove(K key) {
+        return null;
+    }
+
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public Iterator<Entry<K, V>> iterator() {
+        return null;
     }
 
     private Node<K,V> insertR(K key, V value, Node<K,V> p) {
@@ -157,6 +183,8 @@ public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
 	/**
 	 * Pretty prints the tree
 	 */
+
+/*
 	public void prettyPrint() {
         printR(0, root);
     }
@@ -184,3 +212,5 @@ public class BinaryTreeDictionary<K, V> implements Dictionary<K, V> {
         System.out.print("|__");
     }
 }
+
+*/
