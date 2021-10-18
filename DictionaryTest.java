@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * @author oliverbittel
  */
 public class DictionaryTest {
-
+	private static String path = "/home/victor/Studium/Algorithmen_und_Datenstrukturen/aufgabe1/dictionary";
 	/**
 	 * @param args not used.
 	 */
@@ -163,7 +163,7 @@ public class DictionaryTest {
 					int max = Integer.parseInt(matcherMax.group(1)); /// argument an 2. stelle(number) in Int
 					int counter = 0;
 
-					while ((line = in.readLine() != null && counter < max)) {
+					while ((line = in.readLine()) != null && counter < max) {
 						String[] wordArr = line.split(" ");
 						dict.insert(wordArr[0], wordArr[1]); //insert ins dict
 						++counter;
@@ -282,6 +282,25 @@ public class DictionaryTest {
 			case binary:
 				dict = new BinaryTreeDictionary<>();
 				break;
+		}
+	}
+
+	private static void createDict(int n) {
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(path));
+			String line = reader.readLine();
+			int i = 0;
+			while (line != null && i < n) {
+				String[] words = line.split(" ");
+				String german = words[0];
+				String english = words[1];
+				dict.insert(german, english);
+				line = reader.readLine();
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
