@@ -6,9 +6,13 @@
  */
 package dictionary;
 
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Static test methods for different Dictionary implementations.
@@ -120,39 +124,38 @@ public class DictionaryTest {
 	}
 	private static void terminalTest() throws IOException {
 		Scanner scanner = new Scanner(System.in);
+		Dictionary<String, String> dict = new SortedArrayDictionary<>();
 
 		while (scanner.hasNext()) {
 			String input = scanner.nextLine().toUpperCase();
-			Dictionary<String, String> dict = new SortedArrayDictionary<>();
 
 ///Erstellung des dict
 
-			if (input.equals("CREATE")) {
-				if (input.equals("CREATE HASHDICTIONARY")) {
-					dict = new dictionary.HashDictionary<>();
-					System.out.println("neues HashDictionary erstellt");
-					continue;
-				} else if (input.equals("CREATE BINARYTREEDICTIONARY")) {
-					dict = new dictionary.BinaryTreeDictionary<>();
-					System.out.println("neues BinaryTreeDictionary erstellt");
-					continue;
-				} else {
-					Dictionary<String, String> dict = new SortedArrayDictionary<>();
-					System.out.println("neues SortedArrayDictionary erstellt");
-				}
+			if (input.equals("CREATE SORTEDARRAYDICTIONARY")) {
+				dict = new SortedArrayDictionary<>();
+				System.out.println("new SortedArrayDictionary created");
+			} else if (input.equals("CREATE BINARYTREEDICTIONARY")) {
+				dict = new BinaryTreeDictionary<>();
+				System.out.println("new BinaryTreeDictionary created");
+			} else if(input.equals("CREATE HASHDICTIONARY")) {
+				Dictionary<String, String> dict = new HashDictionary<>();
+				System.out.println("new HashDictionary created");
+
+			}else if(input.equals("exit")){
+				System.out.println("program was exited");
+				break;
 			}
 
-			if (input.equals("READ")){
-			} else if (input.equals("p")){ //print
-				for(Dictionary.Entry<String, String> b : dict) {
-					System.out.println(b.getKey() + "-" + b.getValue());
+
+			else if (Pattern.matches("READ (\\d+) ([A-Z.\\d_:]+$)", input)){ ///mit number
+				Pattern patternMax = Pattern.compile("(\\d+) ([A-Z.\\d_:]+$)");
+				Matcher matcherMax = patternMax.matcher(input);
+
+				LineNumberReader in;
+				String line;
+				if(matcherMax.find()){
+					in = new LineNumberReader(new FileReader(matcherMax.group(2)));
 				}
-			} else if (input.equals("s")){
-			} else if (input.equals("i [a-zA-Z]*")){
-				Pattern pattern = Pattern.compile("([a-zA-Z]+" + "[a-zA-Z]*$")
-			} else if (input.equals("r")){
-			} else if (input.equals("exit")){
-			}
 		}
 	}
 	
