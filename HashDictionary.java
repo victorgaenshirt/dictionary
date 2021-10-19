@@ -61,7 +61,8 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
                 Entry<K, V> entry = it.next();
 
-                if (entry.getKey() == key) {
+//                if (entry.getKey() == key) {
+                if (entry.getKey().equals(key)) {
                     V retValue = entry.getValue();
                     entry.setValue(value);
                     return retValue;
@@ -102,7 +103,8 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
             Entry<K, V> entry = it.next();
 
-            if (key == entry.getKey()) {
+            if (entry.getKey().equals(key)) {
+//            if (key == entry.getKey()) {
                 return entry.getValue();
             }
         }
@@ -125,7 +127,8 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
         while (it.hasNext()) {
             Entry<K, V> entry = it.next();
-            if (entry.getKey() == key) {
+//            if (entry.getKey() == key) {
+            if (entry.getKey().equals(key)) {
                 V retValue = entry.getValue();
                 map[hashValue].remove(index);
                 elementsInTable--;
