@@ -28,20 +28,19 @@ public class DictionaryTest {
 	}
 
 	private static void testHashDictionary() {
-		Dictionary<String, String> dict = new HashDictionary<>(3);
+//		Dictionary<String, String> dict = new HashDictionary<>(3);
 
 //		dict.search("zwei");
 //		dict.search("einWort");
 //		dict.search("eins");
 //		dict.search("einWort");
-
-		dict.insert("hallo", "hello");
-		dict.search("hallo");
+//		dict.insert("hallo", "hello");
+//		dict.search("hallo");
 
 		//Aufruf war folgendermaßen vorgegeben (also mit der 3 als Argument)
-		//Dictionary<String, String> dict = new HashDictionary<>(3);
+		Dictionary<String, String> dict = new HashDictionary<>(3);
 
-		//testDict(dict);
+		testDict(dict);
 
 	}
 
