@@ -21,13 +21,15 @@ import java.util.regex.Pattern;
  * @author oliverbittel
  */
 public class DictionaryTest {
+	private static Dictionary<String, String> dict = new SortedArrayDictionary<>();
 	private static String path = "/home/victor/Studium/Algorithmen_und_Datenstrukturen/aufgabe1/dictionary";
+
 	/**
 	 * @param args not used.
 	 */
-	public static void main(String[] args) {
-
-		testSortedArrayDictionary();
+	public static void main(String[] args) throws IOException {
+		terminalTest();
+		//testSortedArrayDictionary();
 		//testHashDictionary();
 		//testBinaryTreeDictionary();
 	}
@@ -37,61 +39,61 @@ public class DictionaryTest {
 		testDict(dict);
 	}
 
-	/*
-		private static void testHashDictionary() {
-			Dictionary<String, String> dict = new HashDictionary<>(3);
-			testDict(dict);
+
+//	private static void testHashDictionary() {
+//		Dictionary<String, String> dict = new HashDictionary<>(3);
+//		testDict(dict);
+//	}
+
+/*
+	private static void testBinaryTreeDictionary() {
+		Dictionary<String, String> dict = new BinaryTreeDictionary<>();
+		testDict(dict);
+
+		// Test für BinaryTreeDictionary mit prettyPrint
+		// (siehe Aufgabe 10; Programmiertechnik 2).
+		// Pruefen Sie die Ausgabe von prettyPrint auf Papier nach.
+		BinaryTreeDictionary<Integer, Integer> btd = new BinaryTreeDictionary<>();
+		btd.insert(10, 0);
+		btd.insert(20, 0);
+		btd.insert(50, 0);
+		System.out.println("insert:");
+		btd.prettyPrint();
+
+		btd.insert(40, 0);
+		btd.insert(30, 0);
+		System.out.println("insert:");
+		btd.prettyPrint();
+
+		btd.insert(21, 0);
+		System.out.println("insert:");
+		btd.prettyPrint();
+
+		btd.insert(35, 0);
+		btd.insert(45, 0);
+		System.out.println("insert:");
+		btd.prettyPrint();
+
+		System.out.println("For Each Loop:");
+		for (Dictionary.Entry<Integer, Integer> e : btd) {
+			System.out.println(e.getKey() + ": " + e.getValue());
 		}
 
-	
-		private static void testBinaryTreeDictionary() {
-			Dictionary<String, String> dict = new BinaryTreeDictionary<>();
-			testDict(dict);
-        
-			// Test für BinaryTreeDictionary mit prettyPrint
-			// (siehe Aufgabe 10; Programmiertechnik 2).
-			// Pruefen Sie die Ausgabe von prettyPrint auf Papier nach.
-			BinaryTreeDictionary<Integer, Integer> btd = new BinaryTreeDictionary<>();
-			btd.insert(10, 0);
-			btd.insert(20, 0);
-			btd.insert(50, 0);
-			System.out.println("insert:");
-			btd.prettyPrint();
+		btd.remove(30);
+		System.out.println("remove:");
+		btd.prettyPrint();
 
-			btd.insert(40, 0);
-			btd.insert(30, 0);
-			System.out.println("insert:");
-			btd.prettyPrint();
+		btd.remove(35);
+		btd.remove(40);
+		btd.remove(45);
+		System.out.println("remove:");
+		btd.prettyPrint();
 
-			btd.insert(21, 0);
-			System.out.println("insert:");
-			btd.prettyPrint();
-
-			btd.insert(35, 0);
-			btd.insert(45, 0);
-			System.out.println("insert:");
-			btd.prettyPrint();
-
-			System.out.println("For Each Loop:");
-			for (Dictionary.Entry<Integer, Integer> e : btd) {
-				System.out.println(e.getKey() + ": " + e.getValue());
-			}
-
-			btd.remove(30);
-			System.out.println("remove:");
-			btd.prettyPrint();
-
-			btd.remove(35);
-			btd.remove(40);
-			btd.remove(45);
-			System.out.println("remove:");
-			btd.prettyPrint();
-		
-			btd.remove(50);
-			System.out.println("remove:");
-			btd.prettyPrint();
-		}
-	*/
+		btd.remove(50);
+		System.out.println("remove:");
+		btd.prettyPrint();
+	}
+*/
 	private static void testDict(Dictionary<String, String> dict) {
 		System.out.println("===== New Test Case ========================");
 		System.out.println("test " + dict.getClass());
@@ -131,28 +133,28 @@ public class DictionaryTest {
 		Dictionary<String, String> dict = new SortedArrayDictionary<>();
 
 		while (scanner.hasNext()) {
-			String input = scanner.nextLine().toUpperCase();
+			String input = scanner.nextLine();
 
 ///Erstellung des dict
 
-			if (input.equals("CREATE SORTEDARRAYDICTIONARY")) {
+			if (input.equalsIgnoreCase("CREATE SORTEDARRAYDICTIONARY")) {
 				dict = new SortedArrayDictionary<>();
 				System.out.println("new SortedArrayDictionary created");
-			} else if (input.equals("CREATE BINARYTREEDICTIONARY")) {
-				dict = new BinaryTreeDictionary<>();
-				System.out.println("new BinaryTreeDictionary created");
-			} else if (input.equals("CREATE HASHDICTIONARY")) {
-				Dictionary<String, String> dict = new HashDictionary<>();
-				System.out.println("new HashDictionary created");
+//			} else if (input.equalsIgnoreCase("CREATE BINARYTREEDICTIONARY")) {
+//				dict = new BinaryTreeDictionary<>();
+//				System.out.println("new BinaryTreeDictionary created");
+//			} else if (input.equalsIgnoreCase("CREATE HASHDICTIONARY")) {
+//				dict = new HashDictionary<>(3);
+//				System.out.println("new HashDictionary created");
 
 			} else if (input.equals("exit")) {
 				System.out.println("program was exited");
 				break;
 
 
-			} else if (Pattern.matches("READ (\\d+) ([A-Z.\\d_:]+$)", input)) {
+			} else if (Pattern.matches("(read|Read|READ) (\\d+) ([A-Za-z.\\d_:]+$)", input)) {
 				/////mit number
-				Pattern patternMax = Pattern.compile("(\\d+) ([A-Z.\\\\\\d_:]+$)");
+				Pattern patternMax = Pattern.compile("(\\d+) ([A-Za-z.\\\\\\d_:]+$)");
 				Matcher matcherMax = patternMax.matcher(input);
 
 				LineNumberReader in;
@@ -172,9 +174,9 @@ public class DictionaryTest {
 				System.out.println("n lines were read into the dictionary");
 
 
-			} else if (Pattern.matches("read ([A-Z.\\\\\\d_:]+$)", input)){
+			} else if (Pattern.matches("(read|Read|READ) ([A-Za-z.\\\\\\d_:]+$)", input)){
 				///ohne Number
-				Pattern pattern = Pattern.compile("([A-Z.\\\\\\d_:]+$)");
+				Pattern pattern = Pattern.compile("([A-Za-z.\\\\\\d_:]+$)");
 				Matcher matcher = pattern.matcher(input);
 
 				LineNumberReader in;
@@ -191,7 +193,7 @@ public class DictionaryTest {
 						dict.insert(wf[0], wf[1]); //insert ins dict					}
 					}
 				}
-				System.out.println("file were read into the dictionary");
+				System.out.println(" whole file were read into the dictionary");
 
 
 			} else if(input.equals("p")){
@@ -201,9 +203,9 @@ public class DictionaryTest {
 					System.out.println(e.getKey() + ": " + e.getValue());
 				}
 
-			} else if(Pattern.matches("s [A-Z]*", input)) {
+			} else if(Pattern.matches("s [A-Za-z]*", input)) {
 				//search german word -> print english word
-				Pattern pattern = Pattern.compile("([A-Z]+$)");
+				Pattern pattern = Pattern.compile("([A-Za-z]+$)");
 				Matcher matcher = pattern.matcher(input);
 
 				if(matcher.find()){
@@ -211,9 +213,9 @@ public class DictionaryTest {
 					System.out.println(dict.search(GermanWord));
 				}
 
-			} else if((Pattern.matches("i [A-Z]* [A-Z]*", input))) {
+			} else if((Pattern.matches("i [A-Za-z]* [A-Za-z]*", input))) {
 				//insert pair of words
-				Pattern pattern = Pattern.compile("([A-Z]+) ([A-Z]+$)");
+				Pattern pattern = Pattern.compile("([A-Za-z]+) ([A-Za-z]+$)");
 				Matcher matcher = pattern.matcher(input);
 
 				if(matcher.find()){
@@ -223,9 +225,9 @@ public class DictionaryTest {
 				}
 				System.out.println("entry was added");
 
-			} else if(Pattern.matches("r [A-Z]*", input)) {
+			} else if(Pattern.matches("r [A-Za-z]*", input)) {
 				//remove one entry
-				Pattern pattern = Pattern.compile("([A-Z]+$)");
+				Pattern pattern = Pattern.compile("([A-Za-z]+$)");
 				Matcher matcher = pattern.matcher(input);
 
 				if (matcher.find()) {
@@ -274,14 +276,14 @@ public class DictionaryTest {
 	private static void initDict(Type type) {
 		switch (type) {
 			case sorted:
-				dict = new SortedArrayDictionary<>();
+				Dictionary<String, String> dict = new SortedArrayDictionary<>();
 				break;
-			case hash:
-				dict = new HashDictionary<>(3);
-				break;
-			case binary:
-				dict = new BinaryTreeDictionary<>();
-				break;
+//			case hash:
+//				dict = new HashDictionary<>(3);
+//				break;
+//			case binary:
+//				dict = new BinaryTreeDictionary<>();
+//				break;
 		}
 	}
 
