@@ -2,6 +2,7 @@ package dictionary;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import static dictionary.hashHelpers.PrimRechner.findNextLargerPrime;
 
@@ -11,6 +12,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     private final int loadFactor = 2;
     private int tableSize = 0;
     private int elementsInTable = 0;
+    private int hashValue = 0;
 
     public HashDictionary(int sizeOfDataset) {
         tableSize = findNextLargerPrime(sizeOfDataset);
@@ -29,7 +31,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     @Override
     public V insert(K key, V value) {
 
-        int hashValue = computeHash(key, tableSize);
+        hashValue = computeHash(key, tableSize);
 
         /* falls key schon in Liste */
         if (search(key) != null) {
@@ -39,7 +41,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
         /* falls key noch nicht in Liste: */
 
         /*falls groessere Hashmap angelegt werden muss*/
-        if (elementsInTable > loadFactor * tableSize) {
+        if (elementsInTable >= loadFactor * tableSize) {
                 copyMapToBiggerMap();
         }
 
@@ -71,15 +73,14 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     }
 
     private void copyMapToBiggerMap() {
-        int newTableSize = findNextLargerPrime(tableSize*2);
-        LinkedList<Entry<K,V>>[] newMap = new LinkedList[newTableSize];
+        tableSize = findNextLargerPrime(tableSize*2);
+        LinkedList<Entry<K,V>>[] newMap = new LinkedList[tableSize];
         Iterator<Entry<K,V >> it = this.iterator();
 
         while (it.hasNext()) {
 
             Entry<K, V> entry = it.next();
-            int newHashAdr = computeHash(entry.getKey(), newTableSize);
-
+            int newHashAdr = computeHash(entry.getKey(), tableSize);
             if (newMap[newHashAdr] == null) {
                 newMap[newHashAdr] = new LinkedList<Entry<K, V>>();
             }
@@ -87,7 +88,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
         }
 
         map = newMap;
-        tableSize = newTableSize;
+
     }
 
 
@@ -155,28 +156,130 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
     private class CustomIterator implements Iterator<Entry<K, V>> {
 
-        private int counter = 0;
-        private int sumOfElementsInPreviousLists = 0;
+/*        private int counter = 0;
+        private int sumOfElementsInPreviousLists = 0;*/
+
+        private int nextCounter = 0;
+        private int nrOfMapArray = 0;
+        private int indexProListe = 0;
 
         @Override
         public boolean hasNext() {
-            if (counter < elementsInTable) {
+            if (nextCounter < elementsInTable) {
                 return true;
             }
             return false;
         }
 
-        @Override
+
+
+/*        @Override
         public Entry<K, V> next() {
             counter++;
 
-            /*  prüft für jede LinkedList, ob counter größer ist als die bisher gezählten Elemente.
+            *//*  prüft für jede LinkedList, ob counter größer ist als die bisher gezählten Elemente.
                 Falls ja, springe eine LinkedList weiter, bis in der richtigen LinkedList, um dort das Element
-                mit dem richtigen Index per list.get(i) zu holen */
+                mit dem richtigen Index per list.get(i) zu holen *//*
 
             for (LinkedList<Entry<K, V>> list : map) {
 
-                /* überspringe leere Listen */
+                *//* überspringe leere Listen *//*
+                if (list == null || list.size() == 0) {
+                    continue;
+                }
+
+                if (counter <= (sumOfElementsInPreviousLists + list.size())) {
+                    int idxForCurrentList = counter - sumOfElementsInPreviousLists;
+
+                    if (idxForCurrentList == list.size()) {
+                        sumOfElementsInPreviousLists += list.size();
+                        //continue;
+                    }
+                    return (list.get(idxForCurrentList-1));
+                }
+                else {
+                    continue;
+                }
+            }
+            return null;
+        }*/
+
+
+        @Override
+        public Entry<K, V> next() {
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            while(true){
+                if(map[nrOfMapArray] != null && indexProListe < map[nrOfMapArray].size()){
+                    Entry<K, V> ret = map[nrOfMapArray].get(indexProListe);
+                    ++indexProListe;
+                    ++nextCounter;
+                    return ret;
+
+                }else{
+                    indexProListe = 0;
+                    ++nrOfMapArray;
+                }
+            }
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /*       @Override
+        public Entry<K, V> next() {
+            counter++;
+
+            *//*  prüft für jede LinkedList, ob counter größer ist als die bisher gezählten Elemente.
+                Falls ja, springe eine LinkedList weiter, bis in der richtigen LinkedList, um dort das Element
+                mit dem richtigen Index per list.get(i) zu holen *//*
+
+            for (LinkedList<Entry<K, V>> list : map) {
+
+                *//* überspringe leere Listen *//*
                 if (list == null || list.size() == 0) {
                     continue;
                 }
@@ -195,9 +298,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
             }
             return null;
         }
-    }
-
-}
+    }*/
 
 
 /*
