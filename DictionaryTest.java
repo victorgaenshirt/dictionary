@@ -25,7 +25,6 @@ public class DictionaryTest {
 	private static void testSortedArrayDictionary() {
 		Dictionary<String, String> dict = new SortedArrayDictionary<>();
 		testDict(dict);
-//		chris_testDict(dict);
 	}
 
 	private static void testHashDictionary() {
@@ -117,31 +116,5 @@ public class DictionaryTest {
 		}
 	}
 
-	private static void chris_testDict(Dictionary<String, String> dict) {
-		System.out.println("===== Chris Case ========================");
-		System.out.println("test " + dict.getClass());
-
-		dict.insert("starten", "start");
-		dict.insert("gehen", "go");
-		dict.insert("schreiben", "write");
-		dict.insert("reden", "say");
-		dict.insert("arbeiten", "work");
-		dict.insert("lesen", "read");
-		dict.insert("singen", "sing");
-		dict.insert("schwimmen", "swim");
-		dict.insert("rennen", "run");
-		dict.insert("beten", "pray");
-		dict.insert("tanzen", "dance");
-		dict.insert("schreien", "cry");
-		dict.insert("tauchen", "dive");
-		dict.insert("fahren", "drive");
-		dict.insert("spielen", "play");
-		dict.insert("planen", "plan");
-		dict.insert("diskutieren", "discuss");
-		System.out.println(dict.size());
-		for (Dictionary.Entry<String, String> e : dict) {
-			System.out.println(e.getKey() + ": " + e.getValue() + " search: " + dict.search(e.getKey()));
-		}
-	}
 
 }
