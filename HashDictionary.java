@@ -2,41 +2,20 @@ package dictionary;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 import static dictionary.hashHelpers.PrimRechner.findNextLargerPrime;
 
 public class HashDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
 
-    //TODO Comparable noch implementieren!
-    //TODO equals implementieren?
-
     private LinkedList<Dictionary.Entry<K, V>>[] map;
-    private final int defaultPrim = 7;
-    private final int maxListSize = 3;
+    private final int loadFactor = 2;
     private int tableSize = 0;
     private int elementsInTable = 0;
 
     public HashDictionary(int sizeOfDataset) {
-
-        /* Berechung der Startgroesse der Hashmap */
-
-        if (sizeOfDataset > defaultPrim / 2) {
-            tableSize = findNextLargerPrime(defaultPrim * 2);
-        } else {
-            tableSize = defaultPrim;
-        }
-
+        tableSize = findNextLargerPrime(sizeOfDataset);
         System.out.println("tablesize: " + tableSize);
-
-        /* Anlegen einer neuen leeren Hashmap */
-
-        int[] hashTable = new int[tableSize];
         map = new LinkedList[tableSize];
-        //map[1] = new LinkedList<Entry<K, V>>();
-        //map[1].add(new Entry<K, V>("aaa", "bbb"));
-        //System.out.println("map[1].size()" + map[1].size());
-
     }
 
     int computeHash(K key) {
@@ -53,38 +32,60 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
         int hashValue = computeHash(key);
 
-        /*falls key schon in Liste, überschreibe zugehörigen Value */
+        /* falls key schon in Liste */
         if (search(key) != null) {
-
-            Iterator<Entry<K, V>> it = map[hashValue].iterator();
-            while (it.hasNext()) {
-
-                Entry<K, V> entry = it.next();
-
-//                if (entry.getKey() == key) {
-                if (entry.getKey().equals(key)) {
-                    V retValue = entry.getValue();
-                    entry.setValue(value);
-                    return retValue;
-                }
-            }
-        } else {  /*falls key noch nicht in Liste: */
-
-            /* falls keine Einträge in map[hashValue] neue LinkedList erzeugen */
-            if (map[hashValue] == null) {
-                map[hashValue] = new LinkedList<Dictionary.Entry<K, V>>();
-                elementsInTable++;
-            }
-
-            //TODO prüfen, ob map[hashValue] size überschreitet
-            //  falls ja, komplette map mit mindestens doppelter Größe neu anlegen
-
-
-            /* Wert zu Liste hinzufügen */
-            map[hashValue].add(new Entry(key, value));
+            return overwriteValueForSameKey(key, value, hashValue);
         }
 
+        /* falls key noch nicht in Liste: */
+
+        /*falls groessere Hashmap angelegt werden muss*/
+        if (elementsInTable > loadFactor * tableSize) {
+                copyMapToBiggerMap();
+        }
+
+        /* falls keine Einträge in map[hashValue] neue LinkedList erzeugen */
+        if (map[hashValue] == null) {
+            map[hashValue] = new LinkedList<Dictionary.Entry<K, V>>();
+        }
+
+        /* eigentlichen insert durchführen */
+        map[hashValue].add(new Entry(key, value));
+        elementsInTable++;
         return null;
+    }
+
+    private V overwriteValueForSameKey(K key, V value, int hashValue) {
+        Iterator<Entry<K, V>> it = map[hashValue].iterator();
+
+        while (it.hasNext()) {
+            Entry<K, V> entry = it.next();
+//                if (entry.getKey() == key) {
+            if (entry.getKey().equals(key)) {
+                V retValue = entry.getValue();
+                entry.setValue(value);
+                return retValue;
+            }
+        }
+        return null;
+    }
+
+    private void copyMapToBiggerMap() {
+        int newTableSize = findNextLargerPrime(tableSize*2);
+        LinkedList<Entry<K,V>>[] newMap = new LinkedList[newTableSize];
+        Iterator<Entry<K,V >> it = this.iterator();
+
+        while (it.hasNext()) {
+            Entry<K, V> entry = it.next();
+            int newHashAdr = computeHash(entry.getKey());
+            if (newMap[newHashAdr] == null) {
+                newMap[newHashAdr] = new LinkedList<Entry<K, V>>();
+            }
+            newMap[newHashAdr].add(entry);
+        }
+
+        map = newMap;
+        tableSize = newTableSize;
     }
 
 
@@ -165,7 +166,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
         @Override
         public Entry<K, V> next() {
-            counter++;
+//            counter++;
             int tempSumOfElementsInLists = 0;
 
             /*  prüft für jede LinkedList, ob counter größer ist
@@ -180,8 +181,9 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
                 else {
                     int diff = tempSumOfElementsInLists - counter;
                     int indexFromFront = list.size() - diff;
-
+                    counter++;
                     return list.get(indexFromFront);
+
                 }
             }
             return null;
