@@ -30,7 +30,7 @@ public class PrimRechner {
     }
 
     private static void printAsPrime(int isPrime) {
-        System.out.println("Primzahl: " + isPrime);
+//        System.out.println("Primzahl: " + isPrime);
     }
 
     public static void findAllPrimesInRange(int upperLimit) {
@@ -50,7 +50,7 @@ public class PrimRechner {
                     if (divisor != isPrime) {
                         break;
                     }
-                    System.out.println("Primzahl: " + isPrime);
+//                    System.out.println("Primzahl: " + isPrime);
                 }
             }
             isPrime++;
