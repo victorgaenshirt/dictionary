@@ -24,7 +24,7 @@ public class DictionaryTest {
 
 	private static Dictionary<String, String> dict = new SortedArrayDictionary<>();
 //	private static String path = "/home/victor/Studium/Algorithmen_und_Datenstrukturen/aufgabe1/dictionary";
-	private static String path = "./";
+	private static String path = "./dtengl.txt";
 
 	/**
 	 * @param args not used.
@@ -32,10 +32,10 @@ public class DictionaryTest {
 	public static void main(String[] args) throws IOException {
 		
 //		testSortedArrayDictionary();
-		testHashDictionary();
+//		testHashDictionary();
 //		testBinaryTreeDictionary();
 
-//		terminalTest();
+		terminalTest();
 	}
 
 	private static void testSortedArrayDictionary() {
