@@ -18,19 +18,19 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
         map = new LinkedList[tableSize];
     }
 
-    int computeHash(K key) {
+    int computeHash(K key, int size) {
         int adr = key.hashCode();
         if (adr < 0 ) {
             adr = -adr;
         }
-        adr = adr % tableSize;
+        adr = adr % size;
         return adr;
     }
 
     @Override
     public V insert(K key, V value) {
 
-        int hashValue = computeHash(key);
+        int hashValue = computeHash(key, tableSize);
 
         /* falls key schon in Liste */
         if (search(key) != null) {
@@ -51,6 +51,10 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
         /* eigentlichen insert durchführen */
         map[hashValue].add(new Entry(key, value));
+
+        System.out.println("key: " + key);
+        System.out.println("value: " + value);
+
         elementsInTable++;
         return null;
     }
@@ -77,7 +81,8 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
         while (it.hasNext()) {
             Entry<K, V> entry = it.next();
-            int newHashAdr = computeHash(entry.getKey());
+            int newHashAdr = computeHash(entry.getKey(), newTableSize);
+            System.out.println("newHashAdr: " + newHashAdr);
             if (newMap[newHashAdr] == null) {
                 newMap[newHashAdr] = new LinkedList<Entry<K, V>>();
             }
@@ -92,7 +97,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     @Override
     public V search(K key) {
 
-        int hashValue = computeHash(key);
+        int hashValue = computeHash(key, tableSize);
 
         if (map[hashValue] == null) {
             return null;
@@ -121,7 +126,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
             return null;
         }
 
-        int hashValue = computeHash(key);
+        int hashValue = computeHash(key, tableSize);
         Iterator<Entry<K, V>> it = map[hashValue].iterator();
 
         int index = 0;
@@ -166,24 +171,31 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
         @Override
         public Entry<K, V> next() {
-//            counter++;
-            int tempSumOfElementsInLists = 0;
+            counter++;
+            System.out.println("counter: " + counter);
+            int sumOfElementsInPreviousLists = 0;
 
             /*  prüft für jede LinkedList, ob counter größer ist
                 als die bisher gezählten Elemente. Falls ja,
                 springe eine LinkedList weiter.
             */
             for (LinkedList<Entry<K, V>> list : map) {
-                tempSumOfElementsInLists += list.size();
-                if (counter > tempSumOfElementsInLists) {
+
+                /* überspringe leere Liste */
+                if (list == null || list.size() == 0) {
                     continue;
                 }
-                else {
-                    int diff = tempSumOfElementsInLists - counter;
-                    int indexFromFront = list.size() - diff;
-                    counter++;
-                    return list.get(indexFromFront);
 
+                if (counter <= (sumOfElementsInPreviousLists + list.size())) {
+                    int idxForCurrentList = counter - sumOfElementsInPreviousLists;
+
+                    if (idxForCurrentList == list.size()) {
+                        sumOfElementsInPreviousLists += list.size();
+                    }
+                    return (list.get(idxForCurrentList-1));
+                }
+                else {
+                    continue;
                 }
             }
             return null;
