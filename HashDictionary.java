@@ -8,89 +8,94 @@ import static dictionary.hashHelpers.PrimRechner.findNextLargerPrime;
 
 public class HashDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
 
-    //TODO Comparable noch implementieren!
-    //TODO equals implementieren?
-
     private LinkedList<Dictionary.Entry<K, V>>[] map;
-    private final int defaultPrim = 7;
-    private final int maxListSize = 3;
+    private final int loadFactor = 2;
     private int tableSize = 0;
     private int elementsInTable = 0;
+    private int hashValue = 0;
 
     public HashDictionary(int sizeOfDataset) {
-
-        /* Berechung der Startgroesse der Hashmap */
-
-        if (sizeOfDataset > defaultPrim / 2) {
-            tableSize = findNextLargerPrime(defaultPrim * 2);
-        } else {
-            tableSize = defaultPrim;
-        }
-
-        System.out.println("tablesize: " + tableSize);
-
-        /* Anlegen einer neuen leeren Hashmap */
-
-        int[] hashTable = new int[tableSize];
+        tableSize = findNextLargerPrime(sizeOfDataset);
         map = new LinkedList[tableSize];
-        //map[1] = new LinkedList<Entry<K, V>>();
-        //map[1].add(new Entry<K, V>("aaa", "bbb"));
-        //System.out.println("map[1].size()" + map[1].size());
-
     }
 
-    int computeHash(K key) {
+    int computeHash(K key, int size) {
         int adr = key.hashCode();
         if (adr < 0 ) {
             adr = -adr;
         }
-        adr = adr % tableSize;
+        adr = adr % size;
         return adr;
     }
 
     @Override
     public V insert(K key, V value) {
 
-        int hashValue = computeHash(key);
+        hashValue = computeHash(key, tableSize);
 
-        /*falls key schon in Liste, überschreibe zugehörigen Value */
+        /* falls key schon in Liste */
         if (search(key) != null) {
-
-            Iterator<Entry<K, V>> it = map[hashValue].iterator();
-            while (it.hasNext()) {
-
-                Entry<K, V> entry = it.next();
-
-                if (entry.getKey() == key) {
-                    V retValue = entry.getValue();
-                    entry.setValue(value);
-                    return retValue;
-                }
-            }
-        } else {  /*falls key noch nicht in Liste: */
-
-            /* falls keine Einträge in map[hashValue] neue LinkedList erzeugen */
-            if (map[hashValue] == null) {
-                map[hashValue] = new LinkedList<Dictionary.Entry<K, V>>();
-                elementsInTable++;
-            }
-
-            //TODO prüfen, ob map[hashValue] size überschreitet
-            //  falls ja, komplette map mit mindestens doppelter Größe neu anlegen
-
-
-            /* Wert zu Liste hinzufügen */
-            map[hashValue].add(new Entry(key, value));
+            return overwriteValueForSameKey(key, value, hashValue);
         }
 
+        /* falls key noch nicht in Liste: */
+
+        /*falls groessere Hashmap angelegt werden muss*/
+        if (elementsInTable >= loadFactor * tableSize) {
+                copyMapToBiggerMap();
+        }
+
+        /* falls keine Einträge in map[hashValue] neue LinkedList erzeugen */
+        if (map[hashValue] == null) {
+            map[hashValue] = new LinkedList<Dictionary.Entry<K, V>>();
+        }
+
+        /* eigentlichen insert durchführen */
+        map[hashValue].add(new Entry(key, value));
+
+        elementsInTable++;
         return null;
+    }
+
+    private V overwriteValueForSameKey(K key, V value, int hashValue) {
+        Iterator<Entry<K, V>> it = map[hashValue].iterator();
+
+        while (it.hasNext()) {
+            Entry<K, V> entry = it.next();
+
+            if (entry.getKey().equals(key)) {
+                V retValue = entry.getValue();
+                entry.setValue(value);
+                return retValue;
+            }
+        }
+        return null;
+    }
+
+    private void copyMapToBiggerMap() {
+        tableSize = findNextLargerPrime(tableSize*2);
+        LinkedList<Entry<K,V>>[] newMap = new LinkedList[tableSize];
+        Iterator<Entry<K,V >> it = this.iterator();
+
+        while (it.hasNext()) {
+
+            Entry<K, V> entry = it.next();
+            int newHashAdr = computeHash(entry.getKey(), tableSize);
+            if (newMap[newHashAdr] == null) {
+                newMap[newHashAdr] = new LinkedList<Entry<K, V>>();
+            }
+            newMap[newHashAdr].add(entry);
+        }
+
+        map = newMap;
+
     }
 
 
     @Override
     public V search(K key) {
 
-        int hashValue = computeHash(key);
+        int hashValue = computeHash(key, tableSize);
 
         if (map[hashValue] == null) {
             return null;
@@ -102,7 +107,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
             Entry<K, V> entry = it.next();
 
-            if (key == entry.getKey()) {
+            if (entry.getKey().equals(key)) {
                 return entry.getValue();
             }
         }
@@ -118,14 +123,15 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
             return null;
         }
 
-        int hashValue = computeHash(key);
+        int hashValue = computeHash(key, tableSize);
         Iterator<Entry<K, V>> it = map[hashValue].iterator();
 
         int index = 0;
 
         while (it.hasNext()) {
             Entry<K, V> entry = it.next();
-            if (entry.getKey() == key) {
+//            if (entry.getKey() == key) {
+            if (entry.getKey().equals(key)) {
                 V retValue = entry.getValue();
                 map[hashValue].remove(index);
                 elementsInTable--;
@@ -150,39 +156,181 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
 
     private class CustomIterator implements Iterator<Entry<K, V>> {
 
-        private int counter = 0;
+/*        private int counter = 0;
+        private int sumOfElementsInPreviousLists = 0;*/
+
+        private int nextCounter = 0;
+        private int nrOfMapArray = 0;
+        private int indexProListe = 0;
 
         @Override
         public boolean hasNext() {
-            if (counter < elementsInTable) {
+            if (nextCounter < elementsInTable) {
                 return true;
             }
             return false;
         }
 
-        @Override
+
+
+/*        @Override
         public Entry<K, V> next() {
             counter++;
-            int tempSumOfElementsInLists = 0;
 
-            /*  prüft für jede LinkedList, ob counter größer ist
-                als die bisher gezählten Elemente. Falls ja,
-                springe eine LinkedList weiter.
-            */
+            *//*  prüft für jede LinkedList, ob counter größer ist als die bisher gezählten Elemente.
+                Falls ja, springe eine LinkedList weiter, bis in der richtigen LinkedList, um dort das Element
+                mit dem richtigen Index per list.get(i) zu holen *//*
+
             for (LinkedList<Entry<K, V>> list : map) {
-                tempSumOfElementsInLists += list.size();
-                if (counter > tempSumOfElementsInLists) {
+
+                *//* überspringe leere Listen *//*
+                if (list == null || list.size() == 0) {
                     continue;
                 }
-                else {
-                    int diff = tempSumOfElementsInLists - counter;
-                    int indexFromFront = list.size() - diff;
 
-                    return list.get(indexFromFront);
+                if (counter <= (sumOfElementsInPreviousLists + list.size())) {
+                    int idxForCurrentList = counter - sumOfElementsInPreviousLists;
+
+                    if (idxForCurrentList == list.size()) {
+                        sumOfElementsInPreviousLists += list.size();
+                        //continue;
+                    }
+                    return (list.get(idxForCurrentList-1));
+                }
+                else {
+                    continue;
+                }
+            }
+            return null;
+        }*/
+
+
+        @Override
+        public Entry<K, V> next() {
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            while(true){
+                if(map[nrOfMapArray] != null && indexProListe < map[nrOfMapArray].size()){
+                    Entry<K, V> ret = map[nrOfMapArray].get(indexProListe);
+                    ++indexProListe;
+                    ++nextCounter;
+                    return ret;
+
+                }else{
+                    indexProListe = 0;
+                    ++nrOfMapArray;
+                }
+            }
+        }
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /*       @Override
+        public Entry<K, V> next() {
+            counter++;
+
+            *//*  prüft für jede LinkedList, ob counter größer ist als die bisher gezählten Elemente.
+                Falls ja, springe eine LinkedList weiter, bis in der richtigen LinkedList, um dort das Element
+                mit dem richtigen Index per list.get(i) zu holen *//*
+
+            for (LinkedList<Entry<K, V>> list : map) {
+
+                *//* überspringe leere Listen *//*
+                if (list == null || list.size() == 0) {
+                    continue;
+                }
+
+                if (counter <= (sumOfElementsInPreviousLists + list.size())) {
+                    int idxForCurrentList = counter - sumOfElementsInPreviousLists;
+
+                    if (idxForCurrentList == list.size()) {
+                        sumOfElementsInPreviousLists += list.size();
+                    }
+                    return (list.get(idxForCurrentList-1));
+                }
+                else {
+                    continue;
                 }
             }
             return null;
         }
-    }
+    }*/
+
+
+/*
+static int hash(String key) {
+    int adr = 0;
+    for(int i = 0; i < key.length(); i++)
+        adr = 31*adr + key.charAt(i);
+
+    if(adr < 0)
+        adr = -adr;
+    return adr % m;
+}
+
+
+V search(K key) {
+    if(adr = searchAdr(key)!=1)
+        return tab[adr].value;
+    else
+        return null;
+}
+
+int searchAdr(K key){
+    j = 0;
+    do{
+        adr = (h(key)+s.(j,key)) % m;
+        j++
+    }while(tab[adr] != null && tab[adr].key != key);
+    if(tab[adr] != null)
+        return adr;
+    else
+        return -1;
 
 }
+
+ */
