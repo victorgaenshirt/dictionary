@@ -30,15 +30,15 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
         int count = 0;
 
         @Override
-        public boolean hasNext() {return count+1 < size;}
+        public boolean hasNext() {return count < size;}
 
         @Override
         public Entry<K,V> next(){
             if(!hasNext()) {
                 throw new NoSuchElementException();
             }
-            ++count;
-            return data[count];
+            //++count;
+            return data[count++];
         }
 
     }
