@@ -6,11 +6,25 @@
  */
 package dictionary;
 
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Static test methods for different Dictionary implementations.
  * @author oliverbittel
  */
 public class DictionaryTest {
+
+	private static Dictionary<String, String> dict = new SortedArrayDictionary<>();
+//	private static String path = "/home/victor/Studium/Algorithmen_und_Datenstrukturen/aufgabe1/dictionary";
+	private static String path = "./";
 
 	/**
 	 * @param args not used.
@@ -18,8 +32,10 @@ public class DictionaryTest {
 	public static void main(String[] args)  {
 		
 		testSortedArrayDictionary();
-		//testHashDictionary();
-		//testBinaryTreeDictionary();
+		testHashDictionary();
+//		testBinaryTreeDictionary();
+
+//		terminalTest();
 	}
 
 	private static void testSortedArrayDictionary() {
@@ -33,6 +49,7 @@ public class DictionaryTest {
 	}
 
 	
+/*
 	private static void testBinaryTreeDictionary() {
 		Dictionary<String, String> dict = new BinaryTreeDictionary<>();
 		testDict(dict);
@@ -80,7 +97,8 @@ public class DictionaryTest {
         System.out.println("remove:");
         btd.prettyPrint();
     }
-	
+*/
+
 	private static void testDict(Dictionary<String, String> dict) {
 		System.out.println("===== New Test Case ========================");
 		System.out.println("test " + dict.getClass());
