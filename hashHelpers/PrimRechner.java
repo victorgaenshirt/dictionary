@@ -7,7 +7,7 @@ public class PrimRechner {
         while (! isNumberAPrim(isPrim)) {
             isPrim++;
         }
-        printAsPrime(isPrim);
+//        printAsPrime(isPrim);
         return isPrim;
     }
 
@@ -39,7 +39,7 @@ public class PrimRechner {
         while (isPrime <= upperLimit) {
 
             if (isPrime == 1) {
-                printAsPrime(isPrime);
+//                printAsPrime(isPrime);
                 isPrime++;
                 continue;
             }
