@@ -29,9 +29,9 @@ public class DictionaryTest {
 	/**
 	 * @param args not used.
 	 */
-	public static void main(String[] args)  {
+	public static void main(String[] args) throws IOException {
 		
-		testSortedArrayDictionary();
+//		testSortedArrayDictionary();
 		testHashDictionary();
 //		testBinaryTreeDictionary();
 
@@ -148,9 +148,9 @@ public class DictionaryTest {
 //			} else if (input.equalsIgnoreCase("CREATE BINARYTREEDICTIONARY")) {
 //				dict = new BinaryTreeDictionary<>();
 //				System.out.println("new BinaryTreeDictionary created");
-//			} else if (input.equalsIgnoreCase("CREATE HASHDICTIONARY")) {
-//				dict = new HashDictionary<>(3);
-//				System.out.println("new HashDictionary created");
+			} else if (input.equalsIgnoreCase("CREATE HASHDICTIONARY")) {
+				dict = new HashDictionary<>(3);
+				System.out.println("new HashDictionary created");
 
 			} else if (input.equals("exit")) {
 				System.out.println("program was exited");
@@ -285,9 +285,9 @@ public class DictionaryTest {
 			case sorted:
 				Dictionary<String, String> dict = new SortedArrayDictionary<>();
 				break;
-//			case hash:
-//				dict = new HashDictionary<>(3);
-//				break;
+			case hash:
+				dict = new HashDictionary<>(3);
+				break;
 //			case binary:
 //				dict = new BinaryTreeDictionary<>();
 //				break;
