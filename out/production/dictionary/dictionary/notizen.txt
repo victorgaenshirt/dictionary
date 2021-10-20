@@ -10,32 +10,18 @@ warum genuegt nicht:
 ... <K extends Comparable<K>, ...
 
 ----
-warum bei insert probleme?
-
-required type: int, provided type K
-
-public V insert(K key, V value) {
-
-     V r = data[key].getValue();
-
-eventuelle Lösung:
-
-Vielleicht brauchen wir eine private Hilfsmethode?
-z.B. int searchIndex(K key){}
-
-siehe Kommentare bei search() und insert()
-----
 
 
-while (data.hasNext()) {
-    Entry<V, K> tmp = data.next();
-    if (tmp.key ==
-}
----------------------------------------------------
-insert als Pseudocode:
+AUFTEILUNG / NOCH TO DO:
 
-checken, ob key drin ist
-falls drin, alten value returnen, neuen eintragen
+Christian:
 
-falls nicht drin
-   schleife wieder durchlaufen, checken ob keyToInsert <= vorhandenerKey ist
+HashDict fertig machen
+- in groessere Tabelle kopieren
+- eventuell tag machen
+- mergen
+- DictionaryTest ausführen und mögliche Fehler beheben
+- tags machen
+
+
+Benchmarks funktionieren bisher für SortedArrayDict
