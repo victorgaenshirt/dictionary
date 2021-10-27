@@ -7,6 +7,8 @@
 package dictionary;
 
 
+import dictionary.ourTests.hashDictionaryTests.TestHashDict;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class DictionaryTest {
 		testHashDictionary();
 //		testBinaryTreeDictionary();
 
-//		terminalTest();
+		terminalTest();
 	}
 
 	private static void testSortedArrayDictionary() {
@@ -43,9 +45,16 @@ public class DictionaryTest {
 	}
 
 	private static void testHashDictionary() {
+//        runOurOwnTestsFirst();
+
 		Dictionary<String, String> dict = new HashDictionary<>(3);
 		testDict(dict);
 	}
+
+    private static void runOurOwnTestsFirst() {
+        TestHashDict tester = new TestHashDict();
+        tester.runTests();
+    }
 
 	
 /*

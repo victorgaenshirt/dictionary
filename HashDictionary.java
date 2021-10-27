@@ -12,8 +12,6 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     private final int loadFactor = 2;
     private int tableSize = 0;
     private int elementsInTable = 0;
-    private int hashValue = 0;
-    private int deleteThisVarImmediately = 0;
 
     public HashDictionary(int sizeOfDataset) {
         tableSize = findNextLargerPrime(sizeOfDataset);
@@ -32,7 +30,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     @Override
     public V insert(K key, V value) {
 
-        hashValue = computeHash(key, tableSize);
+        int hashValue = computeHash(key, tableSize);
 
         /* falls key schon in Liste */
         if (search(key) != null) {
@@ -44,11 +42,13 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
         /*falls groessere Hashmap angelegt werden muss*/
         if (elementsInTable >= loadFactor * tableSize) {
                 copyMapToBiggerMap();
+                hashValue = computeHash(key, tableSize);
         }
 
         /* falls keine Einträge in map[hashValue] neue LinkedList erzeugen */
         if (map[hashValue] == null) {
-            map[hashValue] = new LinkedList<Dictionary.Entry<K, V>>();
+//            map[hashValue] = new LinkedList<Dictionary.Entry<K, V>>();
+            map[hashValue] = new LinkedList<>();
         }
 
         /* eigentlichen insert durchführen */

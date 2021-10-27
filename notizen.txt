@@ -1,6 +1,4 @@
-Fragen:
-
-----
+----------------
 was bedeutet dieses Konstrukt mit super?
 
 public class SortedArrayDictionary<K extends Comparable<? super K>, V> implements Dictionary<K, V> {
@@ -9,4 +7,23 @@ genauer gefragt:
 warum genuegt nicht:
 ... <K extends Comparable<K>, ...
 
-----
+----------------
+FEHLER MIT DER AUSGABE VON PLAY BEHOBEN:
+
+bei der letzten Abgabe war die komplette Ausgabe korrekt, abgesehen von:
+spielen: play search: null
+
+der Fehler war in der insert-Methode:
+nach dem Umkopieren in eine groessere Hashmap wurde noch der alte errechnete Hashwert zum einfügen verwendet.
+Bei der Suche wurde dann der korrekte Hashwert errechnet und an dessen Stelle dann natürlich nichts gefunden.
+
+Daher Fehler behoben durch erneutes Errechnen des Hashwertes nach Umkopieren.
+(da ja bei der modulo-Rechnung nun eine neue Tablesize verwendet wird..)
+
+        /*falls groessere Hashmap angelegt werden muss*/
+        if (elementsInTable >= loadFactor * tableSize) {
+                copyMapToBiggerMap();
+                hashValue = computeHash(key, tableSize);        //diese Zeile wurde neu hinzugefügt
+        }
+
+----------------
