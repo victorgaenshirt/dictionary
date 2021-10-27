@@ -10,12 +10,3 @@ warum genuegt nicht:
 ... <K extends Comparable<K>, ...
 
 ----
-
-TODO:
-- terminalTest() noch testen und erstmal sauber zum laufen bringen
-    (meckert wegen einer nicht abgefangenen Exception.. vermutlich egal?)
-- funktioniert jetzt die Pfad-Angabe?
-    //	private static String path = "/home/victor/Studium/Algorithmen_und_Datenstrukturen/aufgabe1/dictionary";
-	private static String path = "./";
-	sollten es überall ausführen können.
-- hoffen, dass es läuft ;)
