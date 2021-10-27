@@ -13,6 +13,7 @@ public class HashDictionary<K extends Comparable<? super K>, V> implements Dicti
     private int tableSize = 0;
     private int elementsInTable = 0;
     private int hashValue = 0;
+    private int deleteThisVarImmediately = 0;
 
     public HashDictionary(int sizeOfDataset) {
         tableSize = findNextLargerPrime(sizeOfDataset);
