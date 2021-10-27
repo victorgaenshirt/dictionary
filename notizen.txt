@@ -26,4 +26,8 @@ Daher Fehler behoben durch erneutes Errechnen des Hashwertes nach Umkopieren.
                 hashValue = computeHash(key, tableSize);        //diese Zeile wurde neu hinzugefügt
         }
 
+
+fixed error: ausgabe von search(play). alles problemlos in den master branch gemerget.
+branch abgabe und findNullError koennen
+
 ----------------
