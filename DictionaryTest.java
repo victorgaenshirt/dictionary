@@ -33,10 +33,10 @@ public class DictionaryTest {
 	public static void main(String[] args) throws IOException {
 		
 //		testSortedArrayDictionary();
-		testHashDictionary();
-//		testBinaryTreeDictionary();
+//		testHashDictionary();
+		testBinaryTreeDictionary();
 
-		terminalTest();
+//		terminalTest();
 	}
 
 	private static void testSortedArrayDictionary() {
@@ -57,7 +57,7 @@ public class DictionaryTest {
     }
 
 	
-/*
+
 	private static void testBinaryTreeDictionary() {
 		Dictionary<String, String> dict = new BinaryTreeDictionary<>();
 		testDict(dict);
@@ -105,7 +105,7 @@ public class DictionaryTest {
         System.out.println("remove:");
         btd.prettyPrint();
     }
-*/
+
 
 	private static void testDict(Dictionary<String, String> dict) {
 		System.out.println("===== New Test Case ========================");
