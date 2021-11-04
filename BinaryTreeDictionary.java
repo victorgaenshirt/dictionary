@@ -1,16 +1,10 @@
 // O. Bittel
 // 22.02.2017
 
-
 package dictionary;
 
-
-
-import java.util.Comparator;
 import java.util.Iterator;
 import java.lang.Comparable;
-import java.util.NoSuchElementException;
-import java.lang.Math;
 
 import static java.lang.Math.max;
 
@@ -25,9 +19,7 @@ import static java.lang.Math.max;
  * @param <K> Key.
  * @param <V> Value.
  */
-
-
-public class BinaryTreeDictionary<K extends Comparable <? super K>, V> implements Dictionary<K, V> {
+ class BinaryTreeDictionary<K extends Comparable <? super K>, V> implements Dictionary<K, V> {
 
 
     static private class Node<K, V> {
@@ -61,7 +53,7 @@ public class BinaryTreeDictionary<K extends Comparable <? super K>, V> implement
         return p;
     }
 
-    private Node<K,V> ParentOfLeftMostAncestor(Node<K,V> p) {
+    private Node<K,V> parentOfLeftMostAncestor(Node<K,V> p) {
         assert p != null;
         while(p.parent != null && p.parent.right == p)
             p = p.parent;
@@ -69,8 +61,8 @@ public class BinaryTreeDictionary<K extends Comparable <? super K>, V> implement
     }
 
     private int getHeight(Node<K,V> p) {
-        if(p == null)
-            return -1;
+        if (p == null)
+            return -1; //ist Definitionssache: Höhe eines leeren Baumes = -1
         else
             return p.height;
     }
@@ -89,24 +81,29 @@ public class BinaryTreeDictionary<K extends Comparable <? super K>, V> implement
 
     @Override
     public V remove(K key) {
-        removeR(key, root);
+        root = removeR(key, root);
+        if (root != null)
+            root.parent = null;
         return oldValue;
     }
 
     private Node<K,V> removeR(K key, Node<K,V> p){
-        if(p == null) {oldValue = null;}
+        if(p == null)
+            oldValue = null;
         else if(key.compareTo(p.key) < 0)
             p.left = removeR(key,p.left);
-        else if(key.compareTo(p.key) < 0)
+        else if(key.compareTo(p.key) > 0)
             p.right = removeR(key, p.right);
         else if(p.left == null || p.right == null) {
             //p muss gelöscht werden, hat ein oder kein kind;
             oldValue = p.value;
             p = (p.left != null) ? p.left : p.right;
+            --size;
         } else {
             //p muss gelöscht werden und hat zwei kinder:
             MinEntry<K,V> min = new MinEntry<K,V>();
             p.right = getRemMinR(p.right, min);
+            --size;
             oldValue = p.value;
             p.key = min.key;
             p.value = min.value;
@@ -134,15 +131,82 @@ public class BinaryTreeDictionary<K extends Comparable <? super K>, V> implement
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public Iterator<Entry<K, V>> iterator() {
-        return null;
+        return new BinaryDictionaryIterator();
     }
 
-    /////////////--------->Comparator cmp schreiben
+    private class BinaryDictionaryIterator implements Iterator<Entry<K, V>> {
+
+        int counter = 0;
+        Node<K, V> currentNode = root;
+        K highestKeyUntilNow = leftMostDescendant(root).key;
+
+        @Override
+        public boolean hasNext() {
+            if (counter < size)
+                return true;
+            return false;
+        }
+
+        /**
+         * Durchläuft sämtliche Knoten in korrekter (also sortierter) Reihenfolge.
+         * <p>
+         * Anzahl der bisherigen Aufrufe wird je Iterator in counter gespeichert.
+         * Größter bisher besuchter Key wird in highestKeyUntilNow gespeichert.
+         * <p>
+         * Vorgehensweise:
+         * <p>
+         * Prüfe die Kindknoten, ob deren key kleiner ist als highestKeyUntilNow.
+         * Zuerst versuche den linken Knoten. Falls kleiner, gehe zu dessen leftMostDescendant.
+         * Falls nicht kleiner (also schon besucht), prüfe auf einen rechten Kindknoten mit kleinerem key.
+         * Falls kleiner, gehe zu diesem. Nun prüfe erneut auf kleinere Kindknoten.
+         * ...
+         *
+         */
+        @Override
+        public Entry<K, V> next() {
+
+            Node <K,V> iterationStartNode = currentNode;
+            currentNode = getSmallestUnvisitedLeftNode(currentNode);
+
+            while  (checkForSmallerRightChild(currentNode)) {
+                currentNode = currentNode.right;
+                currentNode = getSmallestUnvisitedLeftNode(currentNode);
+            }
+
+            /* wenn kein kleinerer Kindknoten besucht wurde, steige auf zum Elternknoten*/
+            if (iterationStartNode == currentNode) {
+                currentNode = currentNode.parent;
+            }
+            highestKeyUntilNow = currentNode.key;
+            counter++;
+            return new Entry<>(currentNode.key, currentNode.value);
+        }
+
+
+        private boolean checkForSmallerRightChild(Node<K, V> p) {
+            return p.right != null && highestKeyUntilNow.compareTo(p.right.key) < 0 ;
+        }
+
+
+        private Node<K, V> getSmallestUnvisitedLeftNode(Node<K, V> p) {
+
+            if (p.left != null) {
+                while ( p.left != null && highestKeyUntilNow.compareTo(p.left.key) < 0 ) {
+                    p = p.left;
+                }
+            }
+
+            return p;
+        }
+
+    };
+
+
     private V searchR(K key, Node<K,V> p) {
         if (p == null) {
             return null;
@@ -166,12 +230,14 @@ public class BinaryTreeDictionary<K extends Comparable <? super K>, V> implement
         return oldValue;
     }
 
+    /* TODO wo wird height inkrementiert?? */
+
     private Node<K,V> insertR(K key, V value, Node<K,V> p) {
         if(p == null){
             p = new Node(key, value);
             oldValue = null;
             ++size;
-        } else if(key.compareTo(p.key) < 0){ //////mit cmp.compare ersetzen
+        } else if(key.compareTo(p.key) < 0){
             p.left = insertR(key,value,p.left);
             if(p.left != null)
                 p.left.parent = p;
