@@ -36,7 +36,7 @@ public class DictionaryTest {
 //		testHashDictionary();
 		testBinaryTreeDictionary();
 
-//		terminalTest();
+		terminalTest();
 	}
 
 	private static void testSortedArrayDictionary() {
@@ -153,9 +153,9 @@ public class DictionaryTest {
 			if (input.equalsIgnoreCase("CREATE SORTEDARRAYDICTIONARY")) {
 				dict = new SortedArrayDictionary<>();
 				System.out.println("new SortedArrayDictionary created");
-//			} else if (input.equalsIgnoreCase("CREATE BINARYTREEDICTIONARY")) {
-//				dict = new BinaryTreeDictionary<>();
-//				System.out.println("new BinaryTreeDictionary created");
+			} else if (input.equalsIgnoreCase("CREATE BINARYTREEDICTIONARY")) {
+				dict = new BinaryTreeDictionary<>();
+				System.out.println("new BinaryTreeDictionary created");
 			} else if (input.equalsIgnoreCase("CREATE HASHDICTIONARY")) {
 				dict = new HashDictionary<>(3);
 				System.out.println("new HashDictionary created");
@@ -268,7 +268,14 @@ public class DictionaryTest {
 				performanceSearchSuccess(8000, 100, "Search Failure 8000: ", Type.hash, false);
 				performanceSearchSuccess(16000, 100, "Search Failure 16000: ", Type.hash, false);
 				System.out.println("");
-
+				System.out.println("BinaryTreeDictionary");
+				performanceCreation(8000, 500, "Aufbau 8000: ", Type.binary);
+				performanceCreation(16000, 500, "Aufbau 16000: ", Type.binary);
+				performanceSearchSuccess(8000, 100, "Search Success 8000: ", Type.binary, true);
+				performanceSearchSuccess(16000, 100, "Search Success 16000: ", Type.binary, true);
+				performanceSearchSuccess(8000, 100, "Search Failure 8000: ", Type.binary, false);
+				performanceSearchSuccess(16000, 100, "Search Failure 16000: ", Type.binary, false);
+				System.out.println("");
 			}else{
 				System.out.println("unknown command");
 			}
@@ -288,6 +295,9 @@ public class DictionaryTest {
 				break;
 			case hash:
 				dict = new HashDictionary<>(3);
+				break;
+			case binary:
+				dict = new BinaryTreeDictionary<>();
 				break;
 		}
 	}
