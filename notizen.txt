@@ -30,4 +30,5 @@ Daher Fehler behoben durch erneutes Errechnen des Hashwertes nach Umkopieren.
 fixed error: ausgabe von search(play). alles problemlos in den master branch gemerget.
 branch abgabe und findNullError koennen
 
+leerzeile
 ----------------
